@@ -1,0 +1,16 @@
+.main-container{
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+.video-controls{
+  display: flex;
+  justify-content: center;
+
+}
+
+.controls{
+  margin:15px
+}
