@@ -11,7 +11,7 @@ export class VideoPlayerComponent implements OnInit {
   @ViewChild('videoContainer') container;
   @ViewChild('videoPlayer') videoPlayer;
   isFullScreen: boolean = false;
-  played: boolean = true;
+  played: boolean = false;
 
   constructor() {
   }
@@ -21,25 +21,19 @@ export class VideoPlayerComponent implements OnInit {
   }
 
   tooglePlayPause() {
-    console.log(this.videoPlayer.nativeElement.paused);
     if (this.videoPlayer.nativeElement.paused){
-      this.videoPlayer.nativeElement.play();
       this.played = true;
+      this.videoPlayer.nativeElement.play();
     }
     else {
-      this.videoPlayer.nativeElement.pause();
       this.played = false;
+      this.videoPlayer.nativeElement.pause();
     }
 
   }
 
   toogleMute() {
     this.videoPlayer.nativeElement.muted = !this.videoPlayer.nativeElement.muted;
-    if(this.controls.nativeElement.children.mute.innerText == "UnMute"){
-      this.controls.nativeElement.children.mute.innerText = "Mute"
-    }else{
-      this.controls.nativeElement.children.mute.innerText = "UnMute"
-    }
   }
 
   toggleFullScreen() {
@@ -82,5 +76,19 @@ export class VideoPlayerComponent implements OnInit {
     console.log(this.videoPlayer.nativeElement.volume);
     this.videoPlayer.nativeElement.volume= e.target.value;
     console.log(this.videoPlayer.nativeElement.volume);
+  }
+
+  getPlayButton(){
+    if(this.played){
+      return "fa fa-pause"
+    }else return "fa fa-play"
+  }
+
+  getMuteButton(){
+
+    if(this.videoPlayer.nativeElement.muted)
+      return "fa fa-volume-off";
+    else return "fa fa-volume-up";
+
   }
 }
