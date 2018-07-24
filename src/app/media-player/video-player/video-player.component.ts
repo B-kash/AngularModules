@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
 
 @Component({
   selector: 'app-video-player',
@@ -12,13 +13,12 @@ export class VideoPlayerComponent implements OnInit {
   @ViewChild('videoPlayer') videoPlayer;
   isFullScreen: boolean = false;
   played: boolean = false;
-
+  currentTime="0:00";
+  duration="0:00";
   constructor() {
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   tooglePlayPause() {
     if (this.videoPlayer.nativeElement.paused){
@@ -40,42 +40,47 @@ export class VideoPlayerComponent implements OnInit {
     if (!this.isFullScreen) {
       if (this.container.requestFullscreen) {
         this.container.requestFullscreen();
-        this.isFullScreen = true;
       } else if (this.container.mozRequestFullScreen) {
 
         this.container.mozRequestFullScreen();
-        this.isFullScreen = true;
 
       }
       else if (this.container.nativeElement.webkitRequestFullscreen) {
-        console.log("state 3");
         this.container.nativeElement.webkitRequestFullscreen();
-        this.isFullScreen = true;
 
       }
       else if (this.container.msRequestFullscreen) {
         this.container.nativeElement.msRequestFullscreen();
-        this.isFullScreen = true;
       }
     } else {
-      if (this.container.nativeElement.cancelFullScreen) {
-        this.container.nativeElement.cancelFullScreen();
+      if (this.container.nativeElement.exitFullscreen) {
+        this.container.nativeElement.exitFullscreen();
       } else if (this.container.nativeElement.mozCancelFullScreen) {
         this.container.nativeElement.mozCancelFullScreen();
-      } else if (this.container.nativeElement.webkitCancelFullScreen) {
+      } else if (this.container.nativeElement.webkitExitFullscreen) {
+        this.container.nativeElement.webkitExitFullscreen();
+      } else if (this.container.nativeElement.msExitFullscreen) {
+        this.container.nativeElement.msExitFullscreen();
+      }else if(this.container.nativeElement.webkitCancelFullScreen){
         this.container.nativeElement.webkitCancelFullScreen();
+      }
+      else{
+        document.webkitCancelFullScreen();
+        //  TODO create your own event to trigger escape key press
       }
     }
 
   }
   onSeek(e){
-    console.log(e);
+    this.videoPlayer.nativeElement.currentTime = (this.videoPlayer.nativeElement.duration*e.target.value)/100;
+  }
+
+  updateSeek(e){
+    this.controls.nativeElement.children['seek-bar'].value = (e.target.currentTime*100)/this.videoPlayer.nativeElement.duration;
   }
   onVolumeChange(e){
-    console.log(e.target.value);
-    console.log(this.videoPlayer.nativeElement.volume);
     this.videoPlayer.nativeElement.volume= e.target.value;
-    console.log(this.videoPlayer.nativeElement.volume);
+    this.videoPlayer.nativeElement.volume= e.target.value;
   }
 
   getPlayButton(){
@@ -86,9 +91,12 @@ export class VideoPlayerComponent implements OnInit {
 
   getMuteButton(){
 
-    if(this.videoPlayer.nativeElement.muted)
+    if(this.videoPlayer.nativeElement.muted || this.videoPlayer.nativeElement.volume==0)
       return "fa fa-volume-off";
     else return "fa fa-volume-up";
 
+  }
+  fullScreenChange(e){
+    this.isFullScreen = !this.isFullScreen;
   }
 }
