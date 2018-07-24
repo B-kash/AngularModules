@@ -77,6 +77,7 @@ export class VideoPlayerComponent implements OnInit {
 
   updateSeek(e){
     this.controls.nativeElement.children['seek-bar'].value = (e.target.currentTime*100)/this.videoPlayer.nativeElement.duration;
+    this.calculateTime();
   }
   onVolumeChange(e){
     this.videoPlayer.nativeElement.volume= e.target.value;
@@ -98,5 +99,22 @@ export class VideoPlayerComponent implements OnInit {
   }
   fullScreenChange(e){
     this.isFullScreen = !this.isFullScreen;
+  }
+
+  calculateTime() {
+    let hour,min,sec,wholeTime;
+    wholeTime = this.videoPlayer.nativeElement.duration;
+    if(wholeTime<60){
+      sec = wholeTime;
+    }else{
+      min = wholeTime/60;
+      sec = wholeTime%60;
+      if(min>=60){
+        hour=min/60;
+        min = min%60;
+      }
+    }
+
+
   }
 }

@@ -1,7 +1,7 @@
 <!--<div class="main-container">-->
 <div class="outer-container"> <!-- this will be the container made by user currently it is not used -->
   <div id="video-container" class="main-container" #videoContainer  (webkitfullscreenchange)="fullScreenChange($event)">
-    <video class="video" (timeupdate)="updateSeek($event)" #videoPlayer>
+    <video class="video" controls (timeupdate)="updateSeek($event)" #videoPlayer>
       <!--<video width="520" height="250" controls autoplay #videoPlayer>-->
       <source src="http://localhost:8000/vid.mp4" >
       Your browser does not support HTML5 video.
