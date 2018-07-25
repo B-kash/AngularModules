@@ -102,19 +102,51 @@ export class VideoPlayerComponent implements OnInit {
   }
 
   calculateTime() {
+    if(this.duration=="0:00"){
+      this.calculateDuration();
+    }
+    this.calculateCurrentTime();
+
+  }
+
+  calculateDuration(){
     let hour,min,sec,wholeTime;
     wholeTime = this.videoPlayer.nativeElement.duration;
     if(wholeTime<60){
-      sec = wholeTime;
+      sec = Math.floor(wholeTime);
     }else{
-      min = wholeTime/60;
-      sec = wholeTime%60;
+      min = Math.floor(wholeTime/60);
+      sec = Math.floor(wholeTime%60);
       if(min>=60){
-        hour=min/60;
-        min = min%60;
+        hour=Math.floor(min/60);
+        min = Math.floor(min%60);
       }
     }
 
+    if(hour>=1){
+      this.duration = hour+":"+min;
+    }else{
+      this.duration = min+":"+sec;
+    }
+  }
 
+  calculateCurrentTime() {
+    let hour=0,min=0,sec=0,currentTime;
+    currentTime = this.videoPlayer.nativeElement.currentTime;
+    if(currentTime<60){
+      sec = Math.floor(currentTime);
+    }else{
+      min = Math.floor(currentTime/60);
+      sec = Math.floor(currentTime%60);
+      if(min>=60){
+        hour=Math.floor(min/60);
+        min = Math.floor(min%60);
+      }
+    }
+    if(hour>=1){
+      this.currentTime = hour+":"+min;
+    }else{
+      this.currentTime = min+":"+sec;
+    }
   }
 }

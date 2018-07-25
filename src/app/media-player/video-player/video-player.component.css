@@ -8,13 +8,13 @@
   /*visibility: hidden;*/
 }
 
-/*.outer-container{*/
-  /*!*width:100%;*!*/
-  /*width:500px;*/
-  /*!*height:100%;*!*/
-  /*!*height: 400px;*!*/
+.outer-container{
+  /*width:100%;*/
+  width:500px;
+  /*height:100%;*/
+  /*height: 400px;*/
   /*overflow: auto;*/
-/*}*/
+}
 
 .controls{
   margin-left:7px;
