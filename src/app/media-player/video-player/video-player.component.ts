@@ -1,24 +1,48 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
+import {VideoInputs} from "./VideoInputs";
 
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.css']
 })
-export class VideoPlayerComponent implements OnInit {
+export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCheck {
 
+
+  //Element References
   @ViewChild('videoControls') controls;
   @ViewChild('videoContainer') container;
   @ViewChild('videoPlayer') videoPlayer;
+
+  //Useful Variables
   isFullScreen: boolean = false;
   played: boolean = false;
   currentTime="0:00";
   duration="0:00";
+  src="";
+
+  //Inputs
+  @Input('videoInputs') videoInputs:VideoInputs;
+
   constructor() {
   }
 
-  ngOnInit() {}
+  ngDoCheck(){
+    if(this.src!=this.videoInputs.src){
+      this.resetSettings();
+      this.src = this.videoInputs.src;
+      this.videoPlayer.nativeElement.src = this.src;
+    }
+  }
+
+  ngOnInit() {
+    this.src = this.videoInputs.src;
+  }
+
+  ngAfterViewInit(){}
+
+  ngOnChanges(changes:SimpleChanges){}
 
   tooglePlayPause() {
     if (this.videoPlayer.nativeElement.paused){
@@ -71,6 +95,7 @@ export class VideoPlayerComponent implements OnInit {
     }
 
   }
+
   onSeek(e){
     this.videoPlayer.nativeElement.currentTime = (this.videoPlayer.nativeElement.duration*e.target.value)/100;
   }
@@ -79,6 +104,7 @@ export class VideoPlayerComponent implements OnInit {
     this.controls.nativeElement.children['seek-bar'].value = (e.target.currentTime*100)/this.videoPlayer.nativeElement.duration;
     this.calculateTime();
   }
+
   onVolumeChange(e){
     this.videoPlayer.nativeElement.volume= e.target.value;
     this.videoPlayer.nativeElement.volume= e.target.value;
@@ -97,12 +123,13 @@ export class VideoPlayerComponent implements OnInit {
     else return "fa fa-volume-up";
 
   }
+
   fullScreenChange(e){
     this.isFullScreen = !this.isFullScreen;
   }
 
   calculateTime() {
-    if(this.duration=="0:00"){
+    if(this.duration=="0:00" || this.duration=="NaN:NaN"){
       this.calculateDuration();
     }
     this.calculateCurrentTime();
@@ -148,5 +175,13 @@ export class VideoPlayerComponent implements OnInit {
     }else{
       this.currentTime = min+":"+sec;
     }
+  }
+
+  resetSettings() {
+    this.isFullScreen = false;
+    this.played = false;
+    this.currentTime="0:00";
+    this.duration="0:00";
+    this.src="";
   }
 }

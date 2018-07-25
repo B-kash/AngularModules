@@ -1,18 +1,19 @@
 <!--<div class="main-container">-->
 <!--<div class="outer-container"> &lt;!&ndash; this will be the container made by user currently it is not used &ndash;&gt;-->
   <div id="video-container" class="main-container" #videoContainer  (webkitfullscreenchange)="fullScreenChange($event)">
-    <video class="video" controls (loadeddata)="calculateTime()"  (timeupdate)="updateSeek($event)" #videoPlayer>
+    <video class="video" (loadeddata)="calculateTime()"  (timeupdate)="updateSeek($event)" #videoPlayer>
       <!--<video width="520" height="250" controls autoplay #videoPlayer>-->
-      <source src="http://localhost:8000/vid.mp4" >
+      <source [src]="src">
       Your browser does not support HTML5 video.
     </video>
-    <div id="video-controls" class="video-controls" #videoControls>
-      <button type="button" id="play-pause" class="controls play" (click)="tooglePlayPause()"><i [class]="getPlayButton()"></i></button>
-      <span id="time" class="controls time-bar">{{currentTime}}/{{duration}}</span>
-      <input type="range" id="seek-bar" class="seekbar controls" min="0" max="100" step="1" value="0" (change)="onSeek($event)">
-      <button type="button" id="mute" (click)="toogleMute()" class="controls mute"><i [class]="getMuteButton()"></i></button>
-      <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1" class="volume-bar controls" (change)="onVolumeChange($event)" >
-      <button type="button" id="full-screen" (click)="toggleFullScreen()" class="controls fullscreen"><i class="fa fa-expand"></i></button>
+    <div *ngIf="videoInputs.controls" id="video-controls" class="video-controls" #videoControls>
+      <button *ngIf="videoInputs.videoControls.play" type="button" id="play-pause" class="controls play" (click)="tooglePlayPause()"><i [class]="getPlayButton()"></i></button>
+      <span *ngIf="videoInputs.videoControls.duration" id="time" class="controls time-bar">{{currentTime}}/{{duration}}</span>
+      <input *ngIf="videoInputs.videoControls.seekbar" type="range" id="seek-bar" class="seekbar controls" min="0" max="100" step="1" value="0" (change)="onSeek($event)">
+      <button *ngIf="videoInputs.videoControls.mute" type="button" id="mute" (click)="toogleMute()" class="controls mute"><i [class]="getMuteButton()"></i></button>
+      <input *ngIf="videoInputs.videoControls.volumeBar" type="range" id="volume-bar" min="0" max="1" step="0.1" value="1" class="volume-bar controls" (change)="onVolumeChange($event)" >
+      <button *ngIf="videoInputs.videoControls.fullScreen" type="button" id="full-screen" (click)="toggleFullScreen()" class="controls fullscreen"><i class="fa fa-expand"></i></button>
+      <button *ngIf="videoInputs.videoControls.download" type="button" id="download"><i class="fa fa-download"></i> </button>
     </div>
 
   </div>
