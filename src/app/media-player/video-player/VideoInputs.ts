@@ -6,6 +6,9 @@ export class VideoInputs{
   //this is for the source of video
   src:string;
 
+  //subtitle track
+  subtitleSrc:string;
+
   //this is for the playlist of videos i.e Array of sources
   srcList=[];
 
