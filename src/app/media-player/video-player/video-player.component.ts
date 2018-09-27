@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import {VideoInputs} from "./VideoInputs";
+import {Api} from "../api.service";
 
 @Component({
   selector: 'app-video-player',
@@ -21,11 +22,13 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
   currentTime="0:00";
   duration="0:00";
   src="";
-
+  subtitles:any;
+  webttSplits:any = [];
+  cues: any = [];
   //Inputs
   @Input('videoInputs') videoInputs:VideoInputs;
 
-  constructor() {
+  constructor(private api:Api) {
   }
 
   ngDoCheck(){
@@ -38,6 +41,7 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
 
   ngOnInit() {
     this.src = this.videoInputs.src;
+    this.getSubtitle();
   }
 
   ngAfterViewInit(){}
@@ -183,5 +187,54 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
     this.currentTime="0:00";
     this.duration="0:00";
     this.src="";
+  }
+
+  getSubtitle() {
+    //to get subtitles
+    this.api.getSubtitle(this.videoInputs.subtitleSrc).subscribe(
+      (res)=>{
+        this.subtitles = res['_body'];
+        this.parseSubtitle();
+      },(err)=>{
+        console.log(err);
+
+
+      }
+    )
+  }
+
+  parseCues() {
+    if(this.webttSplits[0].length<6){
+      return;
+    }else if(this.webttSplits[0].length==6 && this.webttSplits[0]!="WEBVTT"){
+      return;
+    }else if(this.webttSplits[0].length>6 && (this.webttSplits[0][6]!="\n" || this.webttSplits[0][6]!=" " || this.webttSplits[0][6]!="\t")){
+      return;
+    } else{
+      this.webttSplits.forEach(split=>{
+        if(split.substring(0,5)=="STYLE"){
+        //  TODO add it to style block
+        }
+        else if(split.substring(0,6)=="REGION"){
+        //  TODO add it to Region block
+        }
+        else{
+          this.cues.push(split);
+        }
+      })
+    }
+  }
+
+  parseSubtitle() {
+    this.subtitles =  this.subtitles.replace( /\0/g , "");
+    // this.subtitles = this.subtitles.replace( /r /g , "\n");
+    console.log(this.subtitles.split("\r\n"));
+    this.subtitles = this.subtitles.replace(/\r\n/g,"\n");
+    this.subtitles = this.subtitles.replace(/\r/g,"\n");
+
+    this.webttSplits = this.subtitles.split("\n\n");
+    console.log("Cues are ",this.webttSplits);
+
+    this.parseCues();
   }
 }

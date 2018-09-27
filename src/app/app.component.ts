@@ -12,7 +12,8 @@ export class AppComponent implements OnInit{
   videoInputs:VideoInputs = new VideoInputs();
 
   ngOnInit(){
-    this.videoInputs.src = "http://localhost:8000/SampleVideo_720x480_10mb.mp4";
+    this.videoInputs.src = "http://127.0.0.1:8000/Sintel - Third Open Movie by Blender Foundation.mp4";
+    this.videoInputs.subtitleSrc = "http://127.0.0.1:8000/sub.vtt";
 
   }
 

@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import {VideoPlayerComponent} from "./media-player/video-player/video-player.component";
 import { TestComponent } from './test/test.component';
+import {Api} from "./media-player/api.service";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { TestComponent } from './test/test.component';
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [Api],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
