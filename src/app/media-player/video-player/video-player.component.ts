@@ -107,6 +107,7 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
   updateSeek(e){
     this.controls.nativeElement.children['seek-bar'].value = (e.target.currentTime*100)/this.videoPlayer.nativeElement.duration;
     this.calculateTime();
+    this.updateSubtitle();
   }
 
   onVolumeChange(e){
@@ -203,7 +204,7 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
     )
   }
 
-  parseCues() {
+  createCues() {
     if(this.webttSplits[0].length<6){
       return;
     }else if(this.webttSplits[0].length==6 && this.webttSplits[0]!="WEBVTT"){
@@ -217,24 +218,37 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
         }
         else if(split.substring(0,6)=="REGION"){
         //  TODO add it to Region block
+        }else if(split.substring(0,7)=="WEBVTT"){
+        //  We ignore the first line
         }
         else{
           this.cues.push(split);
+
         }
       })
     }
   }
 
   parseSubtitle() {
+
+    //Firstly we remove the null character ""
     this.subtitles =  this.subtitles.replace( /\0/g , "");
     // this.subtitles = this.subtitles.replace( /r /g , "\n");
     console.log(this.subtitles.split("\r\n"));
+    //now we replace carriage return followed by new line by just a new line character
     this.subtitles = this.subtitles.replace(/\r\n/g,"\n");
+    //Now we replace all remaining carriage return with a new line characrer
     this.subtitles = this.subtitles.replace(/\r/g,"\n");
-
+    //We know each block is seperated by 2 consecutive new lines so splitting the string to seprate each block
     this.webttSplits = this.subtitles.split("\n\n");
     console.log("Cues are ",this.webttSplits);
 
-    this.parseCues();
+    this.createCues();
+  }
+
+  updateSubtitle() {
+    this.cues.forEach(cue=>{
+
+    })
   }
 }
