@@ -27,6 +27,7 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
   cues: any = [];
   //Inputs
   @Input('videoInputs') videoInputs:VideoInputs;
+  currentUpperLimit = 0;
 
   constructor(private api:Api) {
   }
@@ -223,8 +224,10 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
         }
         else{
           this.cues.push(split);
-
         }
+
+
+
       })
     }
   }
@@ -248,7 +251,32 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
 
   updateSubtitle() {
     this.cues.forEach(cue=>{
+      let cueSplits = cue.split("\n");
+      let timeInterval = cueSplits[0];
+      let time = timeInterval.split("-->" );
+      // console.log(time[0],time[1]);
 
+      let lowerLimit = this.convertToSeconds(time[0]);
+      let upperLimit = this.convertToSeconds(time[1]);
+      console.log(lowerLimit,upperLimit,this.videoPlayer.nativeElement.currentTime);
+      if(this.videoPlayer.nativeElement.currentTime>=lowerLimit && this.videoPlayer.nativeElement.currentTime<=upperLimit ){
+        console.log("Found subtitle");
+        this.currentUpperLimit = upperLimit;
+        for(let i = 1;i<cueSplits.length;i++){
+          console.log("Print this cue");
+        }
+      }
     })
+  }
+
+  convertToSeconds(time) {
+
+    let timeSplits = time.split(":");
+    let hr = timeSplits[0];
+    let min = timeSplits[1];
+    let sec = timeSplits[2];
+
+    return (hr*60*60+min*60+sec);
+
   }
 }
