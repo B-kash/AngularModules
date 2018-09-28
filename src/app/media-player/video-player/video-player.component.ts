@@ -28,6 +28,7 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
   //Inputs
   @Input('videoInputs') videoInputs:VideoInputs;
   currentUpperLimit = 0;
+  currentSubtitle: string;
 
   constructor(private api:Api) {
   }
@@ -262,8 +263,11 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
       if(this.videoPlayer.nativeElement.currentTime>=lowerLimit && this.videoPlayer.nativeElement.currentTime<=upperLimit ){
         console.log("Found subtitle");
         this.currentUpperLimit = upperLimit;
+        this.currentSubtitle = "";
         for(let i = 1;i<cueSplits.length;i++){
-          console.log("Print this cue");
+          console.log("Print this cue",cueSplits[i]);
+          this.currentSubtitle += cueSplits[i];
+
         }
       }
     })
