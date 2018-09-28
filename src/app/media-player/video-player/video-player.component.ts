@@ -272,9 +272,9 @@ export class VideoPlayerComponent implements OnInit,AfterViewInit,OnChanges,DoCh
   convertToSeconds(time) {
 
     let timeSplits = time.split(":");
-    let hr = timeSplits[0];
-    let min = timeSplits[1];
-    let sec = timeSplits[2];
+    let hr = Number(timeSplits[0]);
+    let min = Number(timeSplits[1]);
+    let sec = Number(timeSplits[2]);
 
     return (hr*60*60+min*60+sec);
 
